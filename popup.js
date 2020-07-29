@@ -26,12 +26,35 @@ form.onsubmit = function (e){
 		newWebsite = "https://" + newWebsite;
 	}
 	if(isValidHttpUrl(newWebsite)){
+		// remove any previous text
+		if (formLabel.hasChildNodes()) {
+  			formLabel.removeChild(formLabel.childNodes[0]);
+		}
 		formLabel.style.color = 'black';
-		formLabel.innerHTML = "Website successfully changed to " + newWebsite;
+		// add text
+		let paragraph = document.createElement("p");     
+		let textnode = document.createTextNode("Website successfully changed to ");
+		// add link
+        let a = document.createElement('a');  
+        let link = document.createTextNode(newWebsite); 
+        a.appendChild(link);  
+        a.title = "Redirect URL";  
+        a.href = newWebsite;
+        // add nodes to formLabel
+        paragraph.appendChild(textnode);
+        paragraph.appendChild(a);
+        formLabel.appendChild(paragraph);
+        // reset form 
 		website.value = "";
+		// send new website to background 
 		chrome.runtime.sendMessage(newWebsite);
 	}
 	else {
+		// remove any previous text
+		if (formLabel.hasChildNodes()) {
+  			formLabel.removeChild(formLabel.childNodes[0]);
+		}
+		// add error message
 		formLabel.innerHTML = "Invalid website, please try again.";
 		formLabel.style.color = 'red';
 	}
