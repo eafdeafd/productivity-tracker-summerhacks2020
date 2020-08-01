@@ -3,7 +3,11 @@
 let website = document.getElementById("website");
 let submit = document.getElementById("submit");
 let form = document.getElementById("myForm");
-let formLabel = document.getElementById("formLabel");
+let formLabel = document.getElementById("myFormBlock");
+let websiteBlock = document.getElementById("websiteBlock");
+let submitBlock = document.getElementById("submitBlock");
+let formBlock = document.getElementById("myFormBlock");
+let formLabelBlock = document.getElementById("formLabelBlock");
 
 function isValidHttpUrl(string) {
   let url;
@@ -47,7 +51,7 @@ form.onsubmit = function (e){
         // reset form 
 		website.value = "";
 		// send new website to background 
-		chrome.runtime.sendMessage(newWebsite);
+		chrome.runtime.sendMessage({redirectURL: newWebsite});
 	}
 	else {
 		// remove any previous text
@@ -57,5 +61,46 @@ form.onsubmit = function (e){
 		// add error message
 		formLabel.innerHTML = "Invalid website, please try again.";
 		formLabel.style.color = 'red';
+	}
+};
+
+formLabel.onsubmit = function (e){
+	e.preventDefault();
+	let newWebsite = websiteBlock.value;
+	if(!newWebsite.startsWith("http")){
+		newWebsite = "https://" + newWebsite;
+	}
+	if(isValidHttpUrl(newWebsite)){
+		// remove any previous text
+		if (formLabelBlock.hasChildNodes()) {
+  			formLabelBlock.removeChild(formLabelBlock.childNodes[0]);
+		}
+		formLabelBlock.style.color = 'black';
+		// add text
+		let paragraph = document.createElement("p");     
+		let textnode = document.createTextNode("Website successfully changed to ");
+		// add link
+        let a = document.createElement('a');  
+        let link = document.createTextNode(newWebsite); 
+        a.appendChild(link);  
+        a.title = "Redirect URL";  
+        a.href = newWebsite;
+        // add nodes to formLabel
+        paragraph.appendChild(textnode);
+        paragraph.appendChild(a);
+        formLabelBlock.appendChild(paragraph);
+        // reset form 
+		websiteBlock.value = "";
+		// send new website to background
+		chrome.runtime.sendMessage({blockedURL: newWebsite});
+	}
+	else {
+		// remove any previous text
+		if (formLabelBlock.hasChildNodes()) {
+  			formLabelBlock.removeChild(formLabelBlock.childNodes[0]);
+		}
+		// add error message
+		formLabelBlock.innerHTML = "Invalid website, please try again.";
+		formLabelBlock.style.color = 'red';
 	}
 };

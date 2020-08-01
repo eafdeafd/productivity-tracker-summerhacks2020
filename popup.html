@@ -7,12 +7,21 @@
       <h1>Website Blocker/Tracker</h1>
     </header>
     <p id="paragraph">Your Website Blocker/Tracker is on. If you would like to disable it, please turn off the chrome extension. </p>
+
     <p id="formLabel">If you would like to change the location of the website redirect, input the desired website in the input box below.</p>
     <form id="myForm" class="form">
-      <label for="websiteRedirect">Enter Website Redirect Location Here:</label>
+      <label for="websiteRedirect">Enter Website Redirect URL Here:</label>
       <input type="text" name="website" id="website">
       <input type="submit" value="Submit" id="submit">
     </form>
+
+    <p id="formLabelBlock">If you would like to add another website to block, input the desired website in the input box below.</p>
+    <form id="myFormBlock" class="form">
+      <label for="websiteBlock">Enter Blocked Website URL Here:</label>
+      <input type="text" name="website" id="websiteBlock">
+      <input type="submit" value="Submit" id="submitBlock">
+    </form>
+    
     <script src="popup.js"></script>
   </body>
 </html>

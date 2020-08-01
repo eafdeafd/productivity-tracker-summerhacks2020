@@ -18,9 +18,12 @@ function updateRedirectURL(){
     if (result.redirectURL !== undefined) {
       storedURL = result.redirectURL;
     }
-    console.log("Got stored value of", result.redirectURL);
     redirectURL = storedURL;
   })
+}
+
+function addBlockedURL(url){
+  blockedURLs.push(url);
 }
 
 function isBlocked(url){
@@ -36,21 +39,45 @@ function isBlocked(url){
   }
   return false;
 }
-  
+
+//listener listens for when url is changed
+chrome.tabs.onUpdated.addListener(
+  function(tabId, changeInfo, tab) {
+    // read changeInfo data
+    // console.log(tabId, changeInfo, tab)
+    if (tab.url && changeInfo.status == 'complete') { 
+      // url has changed; send message to content script
+      let responseObj = {
+        message: "responseObj",
+        isBlocked: isBlocked(tab.url),
+        redirectURL: redirectURL,
+        originalURL: tab.url,
+        blockedURLs: blockedURLs
+      };
+      chrome.tabs.sendMessage(tabId, responseObj);
+    }
+  }
+);
 
 //handle messages from other scripts 
 chrome.runtime.onMessage.addListener(function(response, sender, sendResponse){
-	if(sender.tab){ //message from content script or New Tab
+	if(sender.tab){ //message from New Tab
     let responseObj = {
+      message: "responseObj",
       isBlocked: isBlocked(sender.tab.url),
-      redirectURL: redirectURL
+      redirectURL: redirectURL,
+      originalURL: sender.tab,
+      blockedURLs: blockedURLs
     };
     sendResponse(responseObj);
 	} else { // message from popup.html
-		setRedirectURL(response);
+    if(response.redirectURL){
+      setRedirectURL(response.redirectURL);
+    } else {
+      addBlockedURL(response.blockedURL);
+    }
 	}	
 });
-
 
 //allows extension to display on all tabs that go to actual websites 
 chrome.declarativeContent.onPageChanged.removeRules(undefined, function() {
