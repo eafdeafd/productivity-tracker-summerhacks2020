@@ -21,8 +21,9 @@ function getRedirectTab(){
 
 function getBlockedTabs(){
 	chrome.runtime.sendMessage("get responseObj for Blocked Tabs", function(response){
+		console.log("response", response);
 		let list = document.createElement('ul');
-		for(let blockedURL of response.blockedURLs){
+		for(let blockedURL of JSON.parse(response.blockedURLs)){
 			// add link
 			let listItem = document.createElement('li');
 	        let a = document.createElement('a');  
@@ -30,11 +31,11 @@ function getBlockedTabs(){
 	        a.appendChild(link); 
 	        a.title = "blocked URL";  
 	        a.href = blockedURL;
-        	// append to list
-        	listItem.appendChild(a);
-        	list.appendChild(listItem);
-        }
-        let blockedWebsites = document.getElementById("blockedWebsites");
+	    	// append to list
+	    	listItem.appendChild(a);
+	    	list.appendChild(listItem);
+	    }
+	    let blockedWebsites = document.getElementById("blockedWebsites");
 		blockedWebsites.appendChild(list);
 	});
 }

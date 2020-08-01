@@ -3,7 +3,7 @@
 let website = document.getElementById("website");
 let submit = document.getElementById("submit");
 let form = document.getElementById("myForm");
-let formLabel = document.getElementById("myFormBlock");
+let formLabel = document.getElementById("formLabel");
 let websiteBlock = document.getElementById("websiteBlock");
 let submitBlock = document.getElementById("submitBlock");
 let formBlock = document.getElementById("myFormBlock");
@@ -64,7 +64,7 @@ form.onsubmit = function (e){
 	}
 };
 
-formLabel.onsubmit = function (e){
+formBlock.onsubmit = function (e){
 	e.preventDefault();
 	let newWebsite = websiteBlock.value;
 	if(!newWebsite.startsWith("http")){
@@ -78,16 +78,16 @@ formLabel.onsubmit = function (e){
 		formLabelBlock.style.color = 'black';
 		// add text
 		let paragraph = document.createElement("p");     
-		let textnode = document.createTextNode("Website successfully changed to ");
+		let textnode = document.createTextNode(" successfully added to blocked list.");
 		// add link
         let a = document.createElement('a');  
         let link = document.createTextNode(newWebsite); 
         a.appendChild(link);  
-        a.title = "Redirect URL";  
+        a.title = "blocked URL";  
         a.href = newWebsite;
         // add nodes to formLabel
-        paragraph.appendChild(textnode);
         paragraph.appendChild(a);
+        paragraph.appendChild(textnode);
         formLabelBlock.appendChild(paragraph);
         // reset form 
 		websiteBlock.value = "";

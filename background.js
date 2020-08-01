@@ -3,7 +3,8 @@
 let defaultVal = "https://www.google.com";
 let redirectURL = undefined;
 updateRedirectURL();
-let blockedURLs = ["https://www.youtube.com/" , "https://www.roblox.com/Login"];
+let blockedURLs = [];
+updateBlockedURLs();
 
 function setRedirectURL(url){
   chrome.storage.sync.set({"redirectURL": url}, function() {
@@ -22,8 +23,27 @@ function updateRedirectURL(){
   })
 }
 
+function setBlockedURLs(listBlocked){
+  chrome.storage.sync.set({"blockedURLs": JSON.stringify(listBlocked)}, function() {
+    console.log("Set blockedURLs to ", listBlocked);
+  });
+  updateBlockedURLs();
+}
+
+function updateBlockedURLs(){
+  let stored = [];
+  chrome.storage.sync.get(["blockedURLs"], function(result) {
+    console.log(result);
+    if (result.blockedURLs !== undefined) {
+      stored = JSON.parse(result.blockedURLs);
+    }
+    blockedURLs = stored;
+  })
+}
+
 function addBlockedURL(url){
   blockedURLs.push(url);
+  setBlockedURLs(blockedURLs);
 }
 
 function isBlocked(url){
@@ -52,7 +72,8 @@ chrome.tabs.onUpdated.addListener(
         isBlocked: isBlocked(tab.url),
         redirectURL: redirectURL,
         originalURL: tab.url,
-        blockedURLs: blockedURLs
+        blockedURLs: JSON.stringify(blockedURLs)
+
       };
       chrome.tabs.sendMessage(tabId, responseObj);
     }
@@ -67,7 +88,7 @@ chrome.runtime.onMessage.addListener(function(response, sender, sendResponse){
       isBlocked: isBlocked(sender.tab.url),
       redirectURL: redirectURL,
       originalURL: sender.tab,
-      blockedURLs: blockedURLs
+      blockedURLs: JSON.stringify(blockedURLs)
     };
     sendResponse(responseObj);
 	} else { // message from popup.html
