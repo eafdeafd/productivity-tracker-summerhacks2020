@@ -42,8 +42,22 @@ function updateBlockedURLs(){
 }
 
 function addBlockedURL(url){
-  blockedURLs.push(url);
-  setBlockedURLs(blockedURLs);
+  if(blockedURLs.indexOf(url) === -1){
+    blockedURLs.push(url);
+    setBlockedURLs(blockedURLs);
+    return "added to list";
+  } else {
+    return "url already in list";
+  }
+}
+
+function removeBlockedURL(url){
+  let index = blockedURLs.indexOf(url);
+  console.log(url, index);
+  if(index !== -1){
+    blockedURLs.splice(index, 1);
+    setBlockedURLs(blockedURLs);
+  }
 }
 
 function isBlocked(url){
@@ -83,19 +97,35 @@ chrome.tabs.onUpdated.addListener(
 //handle messages from other scripts 
 chrome.runtime.onMessage.addListener(function(response, sender, sendResponse){
 	if(sender.tab){ //message from New Tab
-    let responseObj = {
-      message: "responseObj",
-      isBlocked: isBlocked(sender.tab.url),
-      redirectURL: redirectURL,
-      originalURL: sender.tab,
-      blockedURLs: JSON.stringify(blockedURLs)
-    };
-    sendResponse(responseObj);
+    if(response.message === "remove Blocked Tab"){
+      removeBlockedURL(response.removeURL);
+      sendResponse("URL removed");
+    }
+    else {
+      let responseObj = {
+        message: "responseObj",
+        isBlocked: isBlocked(sender.tab.url),
+        redirectURL: redirectURL,
+        originalURL: sender.tab,
+        blockedURLs: JSON.stringify(blockedURLs)
+      };
+      sendResponse(responseObj);
+    }
 	} else { // message from popup.html
-    if(response.redirectURL){
+    if(response.redirectURL){ // message from redirectURL form 
       setRedirectURL(response.redirectURL);
     } else {
-      addBlockedURL(response.blockedURL);
+      if(addBlockedURL(response.blockedURL) === "url already in list"){
+        let responseObj = {
+          message: "url already in list"
+        };
+        sendResponse(responseObj);
+      } else {
+        let responseObj = {
+          message: "url added to list"
+        };
+        sendResponse(responseObj);
+      }
     }
 	}	
 });

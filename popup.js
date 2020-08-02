@@ -71,28 +71,38 @@ formBlock.onsubmit = function (e){
 		newWebsite = "https://" + newWebsite;
 	}
 	if(isValidHttpUrl(newWebsite)){
-		// remove any previous text
-		if (formLabelBlock.hasChildNodes()) {
-  			formLabelBlock.removeChild(formLabelBlock.childNodes[0]);
-		}
-		formLabelBlock.style.color = 'black';
-		// add text
-		let paragraph = document.createElement("p");     
-		let textnode = document.createTextNode(" successfully added to blocked list.");
-		// add link
-        let a = document.createElement('a');  
-        let link = document.createTextNode(newWebsite); 
-        a.appendChild(link);  
-        a.title = "blocked URL";  
-        a.href = newWebsite;
-        // add nodes to formLabel
-        paragraph.appendChild(a);
-        paragraph.appendChild(textnode);
-        formLabelBlock.appendChild(paragraph);
-        // reset form 
-		websiteBlock.value = "";
 		// send new website to background
-		chrome.runtime.sendMessage({blockedURL: newWebsite});
+		chrome.runtime.sendMessage({blockedURL: newWebsite}, function(response){
+			if(response.message == "url already in list") {
+				// add error message
+				formLabelBlock.innerHTML = "Website URL is already blocked";
+				formLabelBlock.style.color = 'red';
+				// reset form 
+				websiteBlock.value = "";
+			}
+			else {
+				// remove any previous text
+				if (formLabelBlock.hasChildNodes()) {
+		  			formLabelBlock.removeChild(formLabelBlock.childNodes[0]);
+				}
+				formLabelBlock.style.color = 'black';
+				// add text
+				let paragraph = document.createElement("p");     
+				let textnode = document.createTextNode(" successfully added to blocked list.");
+				// add link
+		        let a = document.createElement('a');  
+		        let link = document.createTextNode(newWebsite); 
+		        a.appendChild(link);  
+		        a.title = "blocked URL";  
+		        a.href = newWebsite;
+		        // add nodes to formLabel
+		        paragraph.appendChild(a);
+		        paragraph.appendChild(textnode);
+		        formLabelBlock.appendChild(paragraph);
+		        // reset form 
+				websiteBlock.value = "";
+			}
+		});
 	}
 	else {
 		// remove any previous text
