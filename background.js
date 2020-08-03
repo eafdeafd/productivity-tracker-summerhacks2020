@@ -1,16 +1,17 @@
 'use strict';
 
 let defaultVal = "https://www.google.com";
-let redirectURL = undefined;
+let redirectURL = [];
 updateRedirectURL();
 let blockedURLs = [];
 updateBlockedURLs();
 let visitedURLs = [];
 updateVisitedURLs();
+let prevIndex = -1;
+let prevTime = new Date().getTime();
 
 function setRedirectURL(url){
   chrome.storage.sync.set({"redirectURL": url}, function() {
-    console.log("Set redirectURL to ", url);
     updateRedirectURL();
   });
 }
@@ -27,7 +28,6 @@ function updateRedirectURL(){
 
 function setBlockedURLs(listBlocked){
   chrome.storage.sync.set({"blockedURLs": JSON.stringify(listBlocked)}, function() {
-    console.log("Set blockedURLs to ", listBlocked);
     updateBlockedURLs();
   });
 }
@@ -48,6 +48,22 @@ function setVisitedURLs(listVisited){
   });
 }
 
+function indexOfURL(url){
+  for(let i = 0; i < visitedURLs.length; i++){
+    if(visitedURLs[i][0] === url){
+      return i;
+    }
+  }
+  return -1;
+}
+
+function timeLap(){
+  let currentTime = new Date().getTime();
+  let timeDiff = currentTime - prevTime;
+  prevTime = currentTime;
+  return timeDiff;
+}
+
 function updateVisitedURLs(){
   let stored = [];
   // get visited URL's from storage
@@ -59,8 +75,17 @@ function updateVisitedURLs(){
     console.log("only stored", visitedURLs);
     // get visited URL's from current window
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
-      if(tabs[0].url !== "" && visitedURLs.indexOf(tabs[0].url) === -1){
-        visitedURLs.push(tabs[0].url); 
+      if(tabs[0].url !== ""){
+        let index = indexOfURL(tabs[0].url);
+        if(index === -1){
+          visitedURLs.push([tabs[0].url, 0]);
+        }
+        if(prevIndex > -1 && prevIndex < visitedURLs.length){
+          visitedURLs[prevIndex][1] += timeLap();
+        }
+        // store prevIndex
+        prevIndex = indexOfURL(tabs[0].url);
+        console.log("prevIndex", prevIndex);
       }
       setVisitedURLs(visitedURLs);
     });
@@ -70,6 +95,7 @@ function updateVisitedURLs(){
 function clearVisitedURLs(){
   setVisitedURLs([]);
   visitedURLs = [];
+  timeLap();
 }
 
 function addBlockedURL(url){
@@ -93,12 +119,7 @@ function removeBlockedURL(url){
 
 function isBlocked(url){
   for(let blocked of blockedURLs){
-    // let regex = RegExp(blocked);
-    // if(regex.test(url)){
-    //   return true;
-    // }
-    // console.log(url);
-    if(blocked === url){
+    if(url.startsWith(blocked)){
       return true;
     }
   }
@@ -119,18 +140,21 @@ chrome.tabs.onUpdated.addListener(
         originalURL: tab.url,
         blockedURLs: JSON.stringify(blockedURLs)
       };
-      chrome.tabs.sendMessage(tabId, responseObj);
+      chrome.tabs.sendMessage(tabId, responseObj, function(response){
+        if(response === "URL blocked"){
+          chrome.tabs.update(tabId, {muted: true});
+        }
+      });
       // update visited windows
+      updateVisitedURLs();
     }
   }
 );
 
-//listens for when active window changes
-chrome.tabs.onActivated.addListener(
-  function(tabId, changeInfo, tab) {
-    updateVisitedURLs();
-  }
-);
+chrome.tabs.onActivated.addListener(function(tabId, changeInfo, tab) {
+  // update visited windows
+  updateVisitedURLs();
+});
 
 //handle messages from other scripts 
 chrome.runtime.onMessage.addListener(function(response, sender, sendResponse){

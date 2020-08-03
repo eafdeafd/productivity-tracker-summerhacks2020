@@ -96,16 +96,27 @@ function getVisitedTabs(){
 		let list = document.createElement('ul');
 		console.log(response.visitedURLs);
 		for(let visitedURL of JSON.parse(response.visitedURLs)){
+			let url = visitedURL[0];
+			let time = visitedURL[1];
 			// add link
 			let listItem = document.createElement('li');
 	        let a = document.createElement('a');  
-	        let link = document.createTextNode(visitedURL);
+	        let link = document.createTextNode(url);
 	        a.appendChild(link); 
 	        a.title = "visited URL";  
-	        a.href = visitedURL;
+	        a.href = url;
+	        // formate time
+			let hours = Math.floor((time / (1000 * 60 * 60)));
+			let minutes = Math.floor((time % (1000 * 60 * 60)) / (1000 * 60));
+			let seconds = Math.floor((time % (1000 * 60)) / 1000);
+			let timeDisplay = hours + "h " + minutes + "m " + seconds + "s ";
+	        // add time
+	        let p = document.createElement('p');  
+	        let timeNode = document.createTextNode(timeDisplay);
+	        p.appendChild(timeNode);
 	    	// append to list
 	    	listItem.appendChild(a);
-	    	// listItem.appendChild(btn);
+	    	listItem.appendChild(p);
 	    	list.appendChild(listItem);
 	    }
 	    let visitedWebsites = document.getElementById("visitedWebsites");
@@ -118,6 +129,8 @@ function getVisitedTabs(){
 		visitedWebsites.appendChild(btn);
 	});
 }
+
+//chrome.runtime.onMessage.addListener(function(response, sender, sendResponse){location.reload();});
 getRedirectTab();
 getBlockedTabs();
 getVisitedTabs();
