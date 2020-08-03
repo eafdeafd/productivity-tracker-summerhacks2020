@@ -2,7 +2,7 @@
   "name": "Extension Redirect",
   "version": "1.0",
   "description": "Build an Extension!",
-  "permissions": ["activeTab", "declarativeContent","storage", "tabs"],
+  "permissions": ["activeTab", "declarativeContent","storage", "tabs", "history"],
   "background": {
   	"scripts": ["background.js"],
   	"persistent": false
