@@ -2,7 +2,7 @@
   "name": "Extension Redirect",
   "version": "1.0",
   "description": "Build an Extension!",
-  "permissions": ["activeTab", "declarativeContent","storage", "tabs", "history"],
+  "permissions": ["activeTab", "declarativeContent","storage", "tabs", "history", "unlimitedStorage"],
   "background": {
   	"scripts": ["background.js"],
   	"persistent": false
@@ -32,6 +32,6 @@
      "js": ["contentScript.js"]
    }
  ],
-
+  "content_security_policy": "script-src 'self' https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css; object-src 'self'",
   "manifest_version": 2
 }

@@ -1,0 +1,25 @@
+.navbar-nav { 
+    flex-direction: row;
+}
+
+#navigation {
+	position: fixed;
+	width: 100%;
+	opacity: 1;
+	z-index: 1;
+}
+
+#title {
+	font-weight: bold;
+}
+
+#home {
+	position: relative;
+	top: 60px;
+}
+
+.navbar-nav > li{ 
+    padding-left: 10px;
+  	padding-right: 10px;
+}
+  

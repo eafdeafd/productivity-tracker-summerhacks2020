@@ -43,7 +43,7 @@ function updateBlockedURLs(){
 }
 
 function setVisitedURLs(listVisited){
-  chrome.storage.sync.set({"visitedURLs": JSON.stringify(listVisited)}, function() {});
+  chrome.storage.local.set({"visitedURLs": JSON.stringify(listVisited)}, function() {});
 }
 
 function indexOfURL(url){
@@ -65,7 +65,7 @@ function timeLap(){
 function updateVisitedURLs(){
   let stored = [];
   // get visited URL's from storage
-  chrome.storage.sync.get(["visitedURLs"], function(result) {
+  chrome.storage.local.get(["visitedURLs"], function(result) {
     if (result.visitedURLs !== undefined) {
       stored = JSON.parse(result.visitedURLs);
     }

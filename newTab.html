@@ -1,22 +1,55 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>New Tab</title>
+    <title>New Tab, Website Monitor</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="newTab.css">
   </head>
   <body>
-    <header>
-      <h1>Website Blocker/Tracker</h1>
-    </header>
-    <h2>Your Website Blocker/Tracker is on. If you would like to disable it, please turn off the chrome extension. </h2>
 
-    <p id = "blockedWebsites"> You are currently blocking the following website URLs: </p>
-    <p> Note: Any website that starts with the blocked website's URL will be blocked. </p>
-    <p id = "redirect"></p>
-    <p> You have visited the following websites: </p>
-    <p id = "visitedWebsites"></p>
-    <p>To add a blocked website or to change the redirect URL, please open the chrome extension popup.</p>
-    <p id = "clock"></p>
-    
+  	<nav id = "navigation" class="navbar navbar-light bg-light">
+	  <div class="container-fluid">
+	    <div class="navbar-header">
+	      <a id = "title" class="navbar-brand" href="#home">Website Monitor</a>
+	    </div>
+	    <ul class="nav navbar-nav">
+	      <li><button id = "buttonBlock" class = "btn btn-light">Blocked Websites</button></li>
+		  <li><button id = "buttonRedirect" class = "btn btn-light">Redirect Website</button></li>
+		  <li><button id = "buttonWeb" class = "btn btn-light">Webpage History</button></li>
+		  <li><button id = "buttonURL" class = "btn btn-light">URL History</button></li>
+	    </ul>
+	  </div>
+	</nav>
+
+  	<div id = "home" class = "container-fluid">
+
+  		<div id = "blockedWebsites">
+  			<p> You are currently blocking the following website URLs: </p>
+	    	<p> Note: Any website that starts with the blocked website's URL will be blocked. </p>
+  		</div>
+
+	    <div id = "redirect">
+			<div class="card">
+			  <div id = "cardHead" class="card-header"></div>
+			  <div id = "cardBody" class ="card-body"></div>
+			</div>
+	    </div>
+	    
+
+	    <div id = "visitedWebsites">
+	    	<p> You have visited the following websites: </p>
+	    </div>
+
+	    <div id = "visitedURLs">
+	    	<p> You have visited the following URLs: </p>
+	    </div>
+
+	    <div id = "clock">	
+	    </div>
+
+	    <p>To add a blocked website or to change the redirect URL, please open the chrome extension popup.</p>
+    </div>
+
   	<script src="newTab.js"></script>
   </body>
 </html>

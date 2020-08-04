@@ -1,26 +1,53 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" crossorigin="anonymous">
   </head>
   <body>
-    <header>
-      <h1>Website Blocker/Tracker</h1>
-    </header>
-    <p id="paragraph">Your Website Blocker/Tracker is on. If you would like to disable it, please turn off the chrome extension. </p>
+    <div class = "container-fluid">
+      <br>
+      <header>
+        <h2 class = "text-nowrap">Website Monitor</h2>
+      </header>
 
-    <p id="formLabel"></p>
-    <form id="myForm" class="form">
-      <label for="websiteRedirect">Change Website Redirect URL Here:</label>
-      <input type="text" name="website" id="website">
-      <input type="submit" value="Submit" id="submit">
-    </form>
+      <hr>
 
-    <p id="formLabelBlock"></p>
-    <form id="myFormBlock" class="form">
-      <label for="websiteBlock">Add Blocked Website URL Here:</label>
-      <input type="text" name="website" id="websiteBlock">
-      <input type="submit" value="Submit" id="submitBlock">
-    </form>
+      <div>
+        <p id="formLabel"></p>
+      </div>
+
+      <div>
+        <form id="myForm" class="form">
+          <div class="form-group">
+            <label for="websiteRedirect"><b>Change Redirect Location:</b></label>
+            <input type="text" placeholder = "Enter Website" class="form-control" name="website" id="website" required>
+          <div class="form-group">
+          <input type="submit" class="btn btn-primary btn-sm btn-block" value="Submit" id="submit">
+        </form>
+      </div>
+
+      <hr>
+
+      <div>
+        <p id="formLabelBlock"></p>
+      </div>
+
+      <div>
+        <form id="myFormBlock" class="form">
+          <div class="form-group">
+            <label for="websiteBlock"><b>Block a Website:</b></label>
+            <input type="text" placeholder = "Enter Website" class="form-control" name="website" id="websiteBlock" required>
+          <div class="form-group">
+          <input type="submit" class="btn btn-primary btn-sm btn-block" value="Submit" id="submitBlock">
+        </form>
+      </div>
+
+      <hr>
+
+      <div>
+        <p class = "small">For more options, open up a new tab.</p>
+      </div>
+    </div>
 
     <script src="popup.js"></script>
   </body>
