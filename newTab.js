@@ -89,8 +89,85 @@ function clearVisitedURLs(){
 	return true;
 }
 
+function condenseResults(listVisited){
+	let dictVisited = new Map();
+	for(let visitedURL of listVisited){
+		let url = new URL(visitedURL[0]);
+		let domain = url.hostname;
+		// get rid of suffix
+		if(domain.endsWith(".edu") || domain.endsWith(".net") || domain.endsWith(".com") || domain.endsWith(".org")){
+			domain = domain.substring(0, domain.length - 4);
+		}
+		// get ending part of host
+		domain = domain.substring(domain.lastIndexOf(".") + 1);
+		// capitalize
+		domain = domain.charAt(0).toUpperCase() + domain.slice(1);
+		if(dictVisited.has(domain)){
+			dictVisited.set(domain, dictVisited.get(domain) + visitedURL[1]);
+		} else {
+			dictVisited.set(domain, visitedURL[1]);
+		}
+	}
+	let allVisited = [];
+	for(let key of dictVisited.keys()){
+		allVisited.push([key, dictVisited.get(key)]);
+	}
+	allVisited.sort(function(v1, v2) {return v2[1] - v1[1]});
+	return allVisited;
+}
+
+function getVisitedTabsCondensed(){
+	let visitedWebsites = document.getElementById("visitedWebsites");
+	while (visitedWebsites.hasChildNodes()){
+		visitedWebsites.removeChild(visitedWebsites.childNodes[0]);
+	}
+	chrome.runtime.sendMessage("get responseObj for Visited Tabs", function(response){
+		let list = document.createElement('ul');
+		let allVisited = JSON.parse(response.visitedURLs);
+		allVisited = condenseResults(allVisited);
+		for(let visitedURL of allVisited){
+			let url = visitedURL[0];
+			let time = visitedURL[1];
+			// add link
+			let listItem = document.createElement('li');
+	        let websiteP = document.createElement('p');  
+	        let link = document.createTextNode(url);
+	        websiteP.appendChild(link); 
+	        // format time
+			let hours = Math.floor((time / (1000 * 60 * 60)));
+			let minutes = Math.floor((time % (1000 * 60 * 60)) / (1000 * 60));
+			let seconds = Math.floor((time % (1000 * 60)) / 1000);
+			let timeDisplay = hours + "h " + minutes + "m " + seconds + "s ";
+	        // add time
+	        let p = document.createElement('p');  
+	        let timeNode = document.createTextNode(timeDisplay);
+	        p.appendChild(timeNode);
+	    	// append to list
+	    	listItem.appendChild(websiteP);
+	    	listItem.appendChild(p);
+	    	list.appendChild(listItem);
+	    }
+		visitedWebsites.appendChild(list);
+		let btn = document.createElement('input');
+		btn.type = "button";
+		btn.className = "btn";
+		btn.value = "Clear History";
+		btn.addEventListener("click", function(){clearVisitedURLs()});
+		let btn2 = document.createElement('input');
+		btn2.type = "button";
+		btn2.className = "btn";
+		btn2.value = "Expand to all URLs";
+		btn2.addEventListener("click", function(){getVisitedTabs()});
+		visitedWebsites.appendChild(btn2);
+		visitedWebsites.appendChild(btn);
+	});
+}
+
 function getVisitedTabs(){
 	let visitedWebsites = document.getElementById("visitedWebsites");
+	while (visitedWebsites.hasChildNodes()){
+		visitedWebsites.removeChild(visitedWebsites.childNodes[0]);
+	}
 	chrome.runtime.sendMessage("get responseObj for Visited Tabs", function(response){
 		let list = document.createElement('ul');
 		let allVisited = JSON.parse(response.visitedURLs);
@@ -105,7 +182,7 @@ function getVisitedTabs(){
 	        a.appendChild(link); 
 	        a.title = "visited URL";  
 	        a.href = url;
-	        // formate time
+	        // format time
 			let hours = Math.floor((time / (1000 * 60 * 60)));
 			let minutes = Math.floor((time % (1000 * 60 * 60)) / (1000 * 60));
 			let seconds = Math.floor((time % (1000 * 60)) / 1000);
@@ -125,12 +202,17 @@ function getVisitedTabs(){
 		btn.className = "btn";
 		btn.value = "Clear History";
 		btn.addEventListener("click", function(){clearVisitedURLs()});
+		let btn2 = document.createElement('input');
+		btn2.type = "button";
+		btn2.className = "btn";
+		btn2.value = "Condense to Website Domains";
+		btn2.addEventListener("click", function(){getVisitedTabsCondensed()});
+		visitedWebsites.appendChild(btn2);
 		visitedWebsites.appendChild(btn);
 	});
 }
 
-//chrome.runtime.onMessage.addListener(function(response, sender, sendResponse){location.reload();});
 getRedirectTab();
 getBlockedTabs();
-getVisitedTabs();
+getVisitedTabsCondensed();
 getTimer();

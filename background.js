@@ -107,7 +107,6 @@ function addBlockedURL(url){
 
 function removeBlockedURL(url){
   let index = blockedURLs.indexOf(url);
-  console.log(url, index);
   if(index !== -1){
     blockedURLs.splice(index, 1);
     setBlockedURLs(blockedURLs);
