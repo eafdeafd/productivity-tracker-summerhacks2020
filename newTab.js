@@ -26,7 +26,6 @@ function removeURL(url){
 		message: "remove Blocked Tab",
 		removeURL: url
 	};
-	console.log("sending obj", responseObj);
 	chrome.runtime.sendMessage(responseObj, function(response){location.reload()});
 	return true;
 }
@@ -86,16 +85,17 @@ function clearVisitedURLs(){
 	let responseObj = {
 		message: "clear visitedURLs"
 	};
-	console.log("sending obj to clear visitedURLs", responseObj);
 	chrome.runtime.sendMessage(responseObj, function(response){location.reload()});
 	return true;
 }
 
 function getVisitedTabs(){
+	let visitedWebsites = document.getElementById("visitedWebsites");
 	chrome.runtime.sendMessage("get responseObj for Visited Tabs", function(response){
 		let list = document.createElement('ul');
-		console.log(response.visitedURLs);
-		for(let visitedURL of JSON.parse(response.visitedURLs)){
+		let allVisited = JSON.parse(response.visitedURLs);
+		allVisited.sort(function(v1, v2) {return v2[1] - v1[1]});
+		for(let visitedURL of allVisited){
 			let url = visitedURL[0];
 			let time = visitedURL[1];
 			// add link
@@ -119,7 +119,6 @@ function getVisitedTabs(){
 	    	listItem.appendChild(p);
 	    	list.appendChild(listItem);
 	    }
-	    let visitedWebsites = document.getElementById("visitedWebsites");
 		visitedWebsites.appendChild(list);
 		let btn = document.createElement('input');
 		btn.type = "button";

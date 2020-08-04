@@ -43,9 +43,7 @@ function updateBlockedURLs(){
 }
 
 function setVisitedURLs(listVisited){
-  chrome.storage.sync.set({"visitedURLs": JSON.stringify(listVisited)}, function() {
-    console.log("Set visitedURLs to ", listVisited);
-  });
+  chrome.storage.sync.set({"visitedURLs": JSON.stringify(listVisited)}, function() {});
 }
 
 function indexOfURL(url){
@@ -72,7 +70,6 @@ function updateVisitedURLs(){
       stored = JSON.parse(result.visitedURLs);
     }
     visitedURLs = stored;
-    console.log("only stored", visitedURLs);
     // get visited URL's from current window
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
       if(tabs[0].url !== ""){
@@ -130,7 +127,6 @@ function isBlocked(url){
 chrome.tabs.onUpdated.addListener(
   function(tabId, changeInfo, tab) {
     // read changeInfo data
-    // console.log(tabId, changeInfo, tab)
     if (tab.url && changeInfo.status == 'complete') { 
       // url has changed; send message to content script
       let responseObj = {
@@ -140,11 +136,10 @@ chrome.tabs.onUpdated.addListener(
         originalURL: tab.url,
         blockedURLs: JSON.stringify(blockedURLs)
       };
-      chrome.tabs.sendMessage(tabId, responseObj, function(response){
-        if(response === "URL blocked"){
-          chrome.tabs.update(tabId, {muted: true});
-        }
-      });
+      if(isBlocked(tab.url)){
+        chrome.tabs.update(tabId, {muted: true});
+        chrome.tabs.sendMessage(tabId, responseObj);
+      }
       // update visited windows
       updateVisitedURLs();
     }
@@ -170,7 +165,6 @@ chrome.runtime.onMessage.addListener(function(response, sender, sendResponse){
     else { // get blocked tabs
       let responseObj = {
         message: "responseObj",
-        isBlocked: isBlocked(sender.tab.url),
         redirectURL: redirectURL,
         originalURL: sender.tab,
         blockedURLs: JSON.stringify(blockedURLs),
