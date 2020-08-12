@@ -164,13 +164,13 @@ chrome.tabs.onUpdated.addListener(
 
 chrome.tabs.onActivated.addListener(function(tabId, changeInfo, tab) {
   // update visited windows
-  updateVisitedURLs(false);
+  updateVisitedURLs(true);
 });
 
 //handle messages from other scripts 
 chrome.runtime.onMessage.addListener(function(response, sender, sendResponse){
 	if(sender.tab){ //message from New Tab
-    updateVisitedURLs(false);
+    updateVisitedURLs(true);
     if(response.message === "remove Blocked Tab"){
       removeBlockedURL(response.removeURL);
       sendResponse("URL removed");
