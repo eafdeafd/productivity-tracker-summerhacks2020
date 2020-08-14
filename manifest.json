@@ -1,7 +1,7 @@
 {
-  "name": "Extension Redirect",
+  "name": "Website Monitor",
   "version": "1.0",
-  "description": "Build an Extension!",
+  "description": "Monitors Chrome website activity and blocks websites",
   "permissions": ["activeTab", "declarativeContent","storage", "tabs", "history", "unlimitedStorage"],
   "background": {
   	"scripts": ["background.js"],

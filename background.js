@@ -1,6 +1,6 @@
 'use strict';
 
-let defaultVal = "https://www.google.com";
+let defaultVal = "https://www.bing.com";
 let redirectURL = [];
 updateRedirectURL();
 let blockedURLs = [];

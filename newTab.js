@@ -76,15 +76,15 @@ function getRedirectTab(){
         cardHead.appendChild(a);
         cardHead.appendChild(textnode2);
 
-        //add iframe
-        let iframe = document.createElement('iframe');
-        iframe.src = response.redirectURL;
-        iframe.name = "redirect URL frame"; 
-        iframe.title = "iframe for redirect URL";
-        iframe.style.border = 'none';
-        iframe.style.height = '100%';
-        iframe.style.width = '100%';
-        cardBody.appendChild(iframe);
+        // //add iframe
+        // let iframe = document.createElement('iframe');
+        // iframe.src = response.redirectURL;
+        // iframe.name = "redirect URL frame"; 
+        // iframe.title = "iframe for redirect URL";
+        // iframe.style.border = 'none';
+        // iframe.style.height = '100%';
+        // iframe.style.width = '100%';
+        // cardBody.appendChild(iframe);
 	});
 }
 
