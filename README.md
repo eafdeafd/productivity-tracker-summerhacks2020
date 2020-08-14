@@ -9,10 +9,10 @@ This extension requires a Chrome browser. The latest browser version is recommen
 
 ## Installation
 
-Since this extension is not public on the Chrome Web Store, you will need to download the extension from the GitHub repo. After you unzip the zip file, you will need to go to chrome://extensions/ and enable developer mode. A couple of buttons should pop up in the top left corner. Press the "Load unpacked" button and open the folder. You should now have the extension installed on your Chrome browser.  
+Since this extension is not public on the Chrome Web Store, you will need to download the extension from the GitHub repo. After you unzip the zip file, you will need to go to [link](chrome://extensions/) and enable developer mode. A couple of buttons should pop up in the top left corner. Press the "Load unpacked" button and open the folder. You should now have the extension installed on your Chrome browser.  
 
 ## Usage
-The extension popup is active when you are on a website that starts with "http(s)://". By clicking the popup, you can change the redirect website location and add blocked websites to the chrome extension.
+The extension popup is active when you are on a website that starts with http(s)://". By clicking the popup, you can change the redirect website location and add blocked websites to the chrome extension.
 
 All the information can be viewed by opening a new tab. Instead of the default new tab you may be used to, you will be able to access the time you spend on websites, unblock websites you blocked previously, and clear website timing history. 
 
