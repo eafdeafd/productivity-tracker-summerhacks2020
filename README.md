@@ -5,11 +5,11 @@ Have you ever been distracted by certain social or gaming websites? Have you eve
 
 ## Requirements
 
-This extension requires a Chrome browser. The latest brower version is recommended, as earlier versions are not guranteed to work. 
+This extension requires a Chrome browser. The latest browser version is recommended, as earlier versions are not guaranteed to work. 
 
 ## Installation
 
-Since this extension is not public on the Chrome Web Store, you will need to download the extension from the github repo. After you unzip the zip file, you will need to goto chrome://extensions/ and enable developer mode. A couple of buttons should pop up in the top left corner. Press the "Load unpacked" button and open the folder. You should now have the extension installed on your Chrome browser.  
+Since this extension is not public on the Chrome Web Store, you will need to download the extension from the GitHub repo. After you unzip the zip file, you will need to go to chrome://extensions/ and enable developer mode. A couple of buttons should pop up in the top left corner. Press the "Load unpacked" button and open the folder. You should now have the extension installed on your Chrome browser.  
 
 ## Usage
 The extension popup is active when you are on a website that starts with "http(s)://". By clicking the popup, you can change the redirect website location and add blocked websites to the chrome extension.
@@ -25,4 +25,4 @@ MIT
 ## Credits
 By: Zile Zhu, Andrew Wu, Dale Kang
 
-Special Thanks To: Anish Vaghasia
+Special Thanks: Anish Vaghasia
